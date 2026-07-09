@@ -1,8 +1,400 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nathan-Peng | 个人主页</title>
+    <style>
+      /* 明暗主题统一变量体系 */
+      :root {
+        --bg-body: #f6f8fc;
+        --bg-card: #ffffff;
+        --bg-nav: #ffffff;
+        --tag-bg: #e8f3ff;
+        --hover-bg: #f0f7ff;
+        --border: #e2e8f0;
+        --text-heading: #0f172a;
+        --text-body: #334155;
+        --text-light: #64748b;
+        --primary: #0969da;
+        --primary-light: #3b8ef3;
+        --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.07);
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-full: 9999px;
+        --transition: all 0.26s ease;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-body: #0c111b;
+          --bg-card: #141c2b;
+          --bg-nav: #141c2b;
+          --tag-bg: #1a2c47;
+          --hover-bg: #1f304e;
+          --border: #273247;
+          --text-heading: #f1f5f9;
+          --text-body: #cbd5e1;
+          --text-light: #94a3b8;
+          --primary: #58a6ff;
+          --primary-light: #79c0ff;
+          --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.18);
+          --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.25);
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Microsoft YaHei", Inter, system-ui, sans-serif;
+        background: var(--bg-body);
+        color: var(--text-body);
+        padding-top: 70px;
+        line-height: 1.75;
+        transition: var(--transition);
+      }
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+      a:hover {
+        color: var(--primary-light);
+      }
+
+      /* 顶部导航 */
+      .header-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: var(--bg-nav);
+        border-bottom: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 max(1.4rem, calc((100vw - 980px) / 2));
+        z-index: 999;
+      }
+      .nav-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .nav-links a {
+        color: var(--text-body);
+        font-weight: 500;
+        font-size: 0.96rem;
+        padding: 5px 0;
+        position: relative;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: var(--transition);
+      }
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* 页面容器 */
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 2rem 1.4rem;
+      }
+
+      /* 首页头部卡片 */
+      .hero-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        padding: 2.8rem;
+        margin-bottom: 3.2rem;
+        display: flex;
+        align-items: center;
+        gap: 2.4rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+      }
+      /* 头像 */
+      .avatar-wrap {
+        flex-shrink: 0;
+      }
+      .avatar {
+        width: 136px;
+        height: 136px;
+        border-radius: var(--radius-full);
+        border: 3px solid var(--primary);
+        object-fit: cover;
+        box-shadow: var(--shadow-md);
+      }
+      .hero-text h1 {
+        font-size: 2.5rem;
+        color: var(--text-heading);
+        margin-bottom: 0.5rem;
+      }
+      .hero-desc {
+        font-size: 1.12rem;
+        color: var(--text-light);
+        margin-bottom: 1.4rem;
+      }
+      .tag-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .tag-item {
+        padding: 0.45rem 1rem;
+        background: var(--tag-bg);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+        font-size: 0.94rem;
+        transition: var(--transition);
+      }
+      .tag-item:hover {
+        background: var(--hover-bg);
+        transform: translateY(-2px);
+      }
+
+      /* 区块标题 */
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        font-size: 1.5rem;
+        color: var(--text-heading);
+        margin-bottom: 1.2rem;
+      }
+      .title-line {
+        width: 5px;
+        height: 22px;
+        border-radius: 3px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+      }
+
+      /* 通用内容卡片 */
+      .content-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1.8rem;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        margin-bottom: 1rem;
+      }
+      .content-box:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-3px);
+      }
+      section {
+        margin-bottom: 3.2rem;
+      }
+      .light-text {
+        color: var(--text-light);
+      }
+
+      /* 仓库列表 */
+      .repo-list {
+        list-style: none;
+      }
+      .repo-list li {
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .repo-list li:last-child {
+        border-bottom: none;
+      }
+      .repo-name {
+        font-size: 1.08rem;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+
+      /* 页脚 */
+      footer {
+        margin-top: 6rem;
+        padding-top: 2.2rem;
+        border-top: 1px solid var(--border);
+        text-align: center;
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+
+      /* 移动端适配 */
+      @media screen and (max-width: 700px) {
+        .header-nav {
+          height: auto;
+          flex-direction: column;
+          padding: 1rem;
+          gap: 0.8rem;
+        }
+        body {
+          padding-top: 115px;
+        }
+        .nav-links {
+          gap: 1rem;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .hero-card {
+          flex-direction: column;
+          text-align: center;
+          padding: 1.6rem;
+        }
+        .avatar {
+          width: 110px;
+          height: 110px;
+        }
+        .hero-text h1 {
+          font-size: 2rem;
+        }
+        .content-box {
+          padding: 1.4rem;
+        }
+      }
+    </style>
+  </head>
   <body>
     <div id="my-banner"></div>
     <script src="https://keepandroidopen.org/banner.js?lang=zh&size=mini&id=my-banner&hidebutton=off"></script>
-    <h1>Hello World</h1>
+    <!-- 顶部导航 -->
+    <nav class="header-nav">
+      <div class="nav-name">Nathan-Peng</div>
+      <div class="nav-links">
+        <a href="#about">关于我</a>
+        <a href="#projects">开源项目</a>
+        <a href="#contact">交流渠道</a>
+        <a target="_blank" href="https://github.com/Nathan-Peng">GitHub</a>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <!-- 首页头部 -->
+      <div class="hero-card">
+        <div class="avatar-wrap">
+          <img
+            class="avatar"
+            src="https://avatars.githubusercontent.com/u/297810409"
+            alt="Nathan-Peng头像"
+          />
+        </div>
+        <div class="hero-text">
+          <h1>Nathan-Peng</h1>
+          <p class="hero-desc">专注三大开发领域，持续分享开源实用项目</p>
+          <div class="tag-group">
+            <a
+              target="_blank"
+              href="https://github.com/Nathan-Peng"
+              class="tag-item"
+              >GitHub 主页</a
+            >
+            <a
+              target="_blank"
+              href="https://nathan-peng.github.io/"
+              class="tag-item"
+              >个人站点</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- 关于我 -->
+      <section id="about">
+        <h2 class="section-title">
+          <span class="title-line"></span>
+          关于我
+        </h2>
+        <div class="content-box">
+          <p>
+            开发方向：Python 工具、Web 服务、TurboWarp
+            JS插件。所有创作内容均开源发布在GitHub仓库。
+          </p>
+          <p>
+            面向开发者，仓库内包含完整源码与开发思路，可供学习、二次修改；面向普通使用者，每款工具都配套简单部署教程，无需深厚编程基础也能快速上手使用。
+          </p>
+          <p class="light-text">
+            日常会持续更新工具、服务、TurboWarp插件，及时修复已知漏洞。
+          </p>
+        </div>
+      </section>
+
+      <!-- 开源项目 -->
+      <section id="projects">
+        <h2 class="section-title">
+          <span class="title-line"></span>
+          项目仓库
+        </h2>
+        <div class="content-box">
+          <ul class="repo-list">
+            <li>
+              <a
+                target="_blank"
+                href="https://github.com/Nathan-Peng?tab=repositories"
+                class="repo-name"
+                >全部仓库</a
+              >
+              <p class="light-text">
+                仓库分为三类：Python 脚本、Web 网页服务、TurboWarp
+                JS插件，按需浏览对应项目。
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 交流渠道 -->
+      <section id="contact">
+        <h2 class="section-title">
+          <span class="title-line"></span>
+          交流渠道
+        </h2>
+        <div class="content-box">
+          <p>所有问题、功能建议均在对应仓库的 Issue 留言反馈。</p>
+          <p class="light-text">留言时标注项目名称，方便快速定位并回复。</p>
+        </div>
+      </section>
+
+      <!-- 页脚 -->
+      <footer>
+        <p>© 2026 Nathan-Peng | 使用 GitHub Pages</p>
+      </footer>
+    </div>
   </body>
 </html>
