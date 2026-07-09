@@ -1,0 +1,42 @@
+name: Deploy GitHub Pages
+
+on:
+  # 手动触发——这就是"手动部署按钮"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: '部署原因（可选）'
+        required: false
+        default: '手动触发'
+  # 保留 push 触发也可以，二者不冲突
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    # 这三个权限是 deploy-pages 必需的
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 如果你的站点需要构建（如 Hugo/Next.js/Astro），在这一步构建
+      # 纯静态 HTML 可以跳过，直接上传整个目录
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'  # 要部署的目录，根据实际情况改
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
