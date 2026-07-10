@@ -1,400 +1,420 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nathan-Peng | 个人主页</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nathan-Peng | 个人开源主页</title>
+    <meta name="description" content="独立开源开发者，专注Python工具、Web服务与桌面应用开发，项目全部开源托管于GitHub。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>N</text></svg>">
     <style>
-      /* 明暗主题统一变量体系 */
-      :root {
-        --bg-body: #f6f8fc;
-        --bg-card: #ffffff;
-        --bg-nav: #ffffff;
-        --tag-bg: #e8f3ff;
-        --hover-bg: #f0f7ff;
-        --border: #e2e8f0;
-        --text-heading: #0f172a;
-        --text-body: #334155;
-        --text-light: #64748b;
-        --primary: #0969da;
-        --primary-light: #3b8ef3;
-        --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.07);
-        --radius-sm: 8px;
-        --radius-md: 14px;
-        --radius-full: 9999px;
-        --transition: all 0.26s ease;
-      }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg-body: #0c111b;
-          --bg-card: #141c2b;
-          --bg-nav: #141c2b;
-          --tag-bg: #1a2c47;
-          --hover-bg: #1f304e;
-          --border: #273247;
-          --text-heading: #f1f5f9;
-          --text-body: #cbd5e1;
-          --text-light: #94a3b8;
-          --primary: #58a6ff;
-          --primary-light: #79c0ff;
-          --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.18);
-          --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.25);
-        }
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: "Microsoft YaHei", Inter, system-ui, sans-serif;
-        background: var(--bg-body);
-        color: var(--text-body);
-        padding-top: 70px;
-        line-height: 1.75;
-        transition: var(--transition);
-      }
-      a {
-        color: var(--primary);
-        text-decoration: none;
-        transition: var(--transition);
-      }
-      a:hover {
-        color: var(--primary-light);
-      }
-
-      /* 顶部导航 */
-      .header-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 70px;
-        background: var(--bg-nav);
-        border-bottom: 1px solid var(--border);
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 max(1.4rem, calc((100vw - 980px) / 2));
-        z-index: 999;
-      }
-      .nav-name {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary);
-      }
-      .nav-links {
-        display: flex;
-        gap: 2rem;
-      }
-      .nav-links a {
-        color: var(--text-body);
-        font-weight: 500;
-        font-size: 0.96rem;
-        padding: 5px 0;
-        position: relative;
-      }
-      .nav-links a::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 0;
-        height: 2px;
-        background: var(--primary);
-        transition: var(--transition);
-      }
-      .nav-links a:hover::after {
-        width: 100%;
-      }
-
-      /* 页面容器 */
-      .wrap {
-        max-width: 980px;
-        margin: 0 auto;
-        padding: 2rem 1.4rem;
-      }
-
-      /* 首页头部卡片 */
-      .hero-card {
-        background: var(--bg-card);
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-md);
-        padding: 2.8rem;
-        margin-bottom: 3.2rem;
-        display: flex;
-        align-items: center;
-        gap: 2.4rem;
-        position: relative;
-        overflow: hidden;
-      }
-      .hero-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 5px;
-        height: 100%;
-        background: linear-gradient(
-          180deg,
-          var(--primary),
-          var(--primary-light)
-        );
-      }
-      /* 头像 */
-      .avatar-wrap {
-        flex-shrink: 0;
-      }
-      .avatar {
-        width: 136px;
-        height: 136px;
-        border-radius: var(--radius-full);
-        border: 3px solid var(--primary);
-        object-fit: cover;
-        box-shadow: var(--shadow-md);
-      }
-      .hero-text h1 {
-        font-size: 2.5rem;
-        color: var(--text-heading);
-        margin-bottom: 0.5rem;
-      }
-      .hero-desc {
-        font-size: 1.12rem;
-        color: var(--text-light);
-        margin-bottom: 1.4rem;
-      }
-      .tag-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-      .tag-item {
-        padding: 0.45rem 1rem;
-        background: var(--tag-bg);
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border);
-        font-size: 0.94rem;
-        transition: var(--transition);
-      }
-      .tag-item:hover {
-        background: var(--hover-bg);
-        transform: translateY(-2px);
-      }
-
-      /* 区块标题 */
-      .section-title {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        font-size: 1.5rem;
-        color: var(--text-heading);
-        margin-bottom: 1.2rem;
-      }
-      .title-line {
-        width: 5px;
-        height: 22px;
-        border-radius: 3px;
-        background: linear-gradient(
-          180deg,
-          var(--primary),
-          var(--primary-light)
-        );
-      }
-
-      /* 通用内容卡片 */
-      .content-box {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 1.8rem;
-        box-shadow: var(--shadow-sm);
-        transition: var(--transition);
-        margin-bottom: 1rem;
-      }
-      .content-box:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-3px);
-      }
-      section {
-        margin-bottom: 3.2rem;
-      }
-      .light-text {
-        color: var(--text-light);
-      }
-
-      /* 仓库列表 */
-      .repo-list {
-        list-style: none;
-      }
-      .repo-list li {
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--border);
-      }
-      .repo-list li:last-child {
-        border-bottom: none;
-      }
-      .repo-name {
-        font-size: 1.08rem;
-        font-weight: 600;
-        display: block;
-        margin-bottom: 0.3rem;
-      }
-
-      /* 页脚 */
-      footer {
-        margin-top: 6rem;
-        padding-top: 2.2rem;
-        border-top: 1px solid var(--border);
-        text-align: center;
-        color: var(--text-light);
-        font-size: 0.9rem;
-      }
-
-      /* 移动端适配 */
-      @media screen and (max-width: 700px) {
-        .header-nav {
-          height: auto;
-          flex-direction: column;
-          padding: 1rem;
-          gap: 0.8rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
         }
         body {
-          padding-top: 115px;
+            background-color: #f7f8fa;
+            color: #1d2129;
+            line-height: 1.68;
         }
-        .nav-links {
-          gap: 1rem;
-          flex-wrap: wrap;
-          justify-content: center;
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
+
+        /* 导航栏 */
+        nav {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        .nav-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0056cc;
+            text-decoration: none;
+            transition: opacity 0.2s ease;
+        }
+        .nav-logo:hover {
+            opacity: 0.8;
+        }
+        .nav-links a {
+            margin-left: 28px;
+            color: #4e5969;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 5px 0;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+        .nav-links a:hover {
+            color: #0056cc;
+        }
+        .nav-links a:hover::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #0056cc;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* 个人名片卡片 */
         .hero-card {
-          flex-direction: column;
-          text-align: center;
-          padding: 1.6rem;
+            background: #fff;
+            border-radius: 14px;
+            padding: 40px;
+            margin: 40px 0;
+            border-left: 6px solid #0056cc;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            box-shadow: 0 3px 16px rgba(0,0,0,0.05);
         }
         .avatar {
-          width: 110px;
-          height: 110px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #0056cc;
+            object-fit: cover;
         }
-        .hero-text h1 {
-          font-size: 2rem;
+        .hero-info h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
         }
-        .content-box {
-          padding: 1.4rem;
+        .hero-info .desc {
+            color: #6b7785;
+            font-size: 17px;
+            margin-bottom: 22px;
         }
-      }
+        .hero-buttons a {
+            display: inline-block;
+            padding: 10px 22px;
+            background: #e8f3ff;
+            color: #0056cc;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-right: 16px;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
+        .hero-buttons a:hover {
+            background: #0056cc;
+            color: #ffffff;
+        }
+
+        /* 通用板块标题 */
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 48px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title::before {
+            content: "";
+            width: 5px;
+            height: 22px;
+            background-color: #0056cc;
+            border-radius: 3px;
+        }
+        .content-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 3px 16px rgba(0,0,0,0.05);
+        }
+
+        /* 技能标签 */
+        .tag-group {
+            margin: 16px 0 22px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            padding: 6px 16px;
+            background: #e8f3ff;
+            color: #0056cc;
+            border-radius: 24px;
+            font-size: 14px;
+        }
+
+        /* 仓库网格布局 */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 22px;
+            margin-top: 24px;
+        }
+        .repo-item {
+            border: 1px solid #e5e6eb;
+            border-radius: 12px;
+            padding: 22px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+        .repo-item:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transform: translateY(-5px);
+            border-color: #d0e4ff;
+        }
+        .repo-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .star-badge {
+            font-size: 14px;
+            color: #666;
+        }
+        .repo-desc {
+            font-size: 14.8px;
+            color: #4e5969;
+            margin-bottom: 14px;
+            min-height: 46px;
+        }
+        .repo-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            font-size: 13.5px;
+            color: #666;
+            margin-bottom: 14px;
+        }
+        .topic-tag {
+            font-size: 12.5px;
+            padding: 3px 8px;
+            background: #f0f7ff;
+            color: #0056cc;
+            border-radius: 14px;
+        }
+        .repo-link {
+            color: #0056cc;
+            text-decoration: none;
+            font-size: 15px;
+            margin-top: auto;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .repo-link:hover {
+            text-decoration: underline;
+        }
+
+        /* 页脚样式 + UptimeRobot美化按钮 */
+        footer {
+            margin-top: 80px;
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7785;
+            border-top: 1px solid #e5e6eb;
+        }
+        .run-detail {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .copyright {
+            margin-bottom: 18px;
+        }
+        .uptime-btn {
+            display: inline-block;
+            padding: 9px 24px;
+            background-color: #009688;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0,150,136,0.25);
+            transition: all 0.25s ease;
+        }
+        .uptime-btn:hover {
+            background-color: #00796b;
+            box-shadow: 0 4px 14px rgba(0,150,136,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 640px) {
+            .hero-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+            .nav-wrap {
+                flex-direction: column;
+                gap: 14px;
+            }
+            .nav-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+            .nav-links a {
+                margin-left: 0;
+            }
+            .hero-buttons a {
+                margin: 0 8px 10px;
+            }
+            .repo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div id="my-banner"></div>
-    <script src="https://keepandroidopen.org/banner.js?lang=zh&size=mini&id=my-banner&hidebutton=off"></script>
-    <!-- 顶部导航 -->
-    <nav class="header-nav">
-      <div class="nav-name">Nathan-Peng</div>
-      <div class="nav-links">
-        <a href="#about">关于我</a>
-        <a href="#projects">开源项目</a>
-        <a href="#contact">交流渠道</a>
-        <a target="_blank" href="https://github.com/Nathan-Peng">GitHub</a>
-      </div>
-    </nav>
+</head>
+<body>
+<!-- 顶部横幅 -->
+<div id="my-banner"></div>
+<script src="https://keepandroidopen.org/banner.js?lang=zh&size=normal&hidebutton=off&id=my-banner"></script>
 
-    <div class="wrap">
-      <!-- 首页头部 -->
-      <div class="hero-card">
-        <div class="avatar-wrap">
-          <img
-            class="avatar"
-            src="https://avatars.githubusercontent.com/u/297810409"
-            alt="Nathan-Peng头像"
-          />
+<!-- 导航栏 -->
+<nav>
+    <div class="container nav-wrap">
+        <a href="#" class="nav-logo">Nathan-Peng</a>
+        <div class="nav-links">
+            <a href="#about">关于我</a>
+            <a href="#project">开源仓库</a>
+            <a href="#contact">交流反馈</a>
+            <a href="https://github.com/Nathan-Peng" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
-        <div class="hero-text">
-          <h1>Nathan-Peng</h1>
-          <p class="hero-desc">专注三大开发领域，持续分享开源实用项目</p>
-          <div class="tag-group">
-            <a
-              target="_blank"
-              href="https://github.com/Nathan-Peng"
-              class="tag-item"
-              >GitHub 主页</a
-            >
-            <a
-              target="_blank"
-              href="https://nathan-peng.github.io/"
-              class="tag-item"
-              >个人站点</a
-            >
-          </div>
-        </div>
-      </div>
-
-      <!-- 关于我 -->
-      <section id="about">
-        <h2 class="section-title">
-          <span class="title-line"></span>
-          关于我
-        </h2>
-        <div class="content-box">
-          <p>
-            开发方向：Python 工具、Web 服务、TurboWarp
-            JS插件。所有创作内容均开源发布在GitHub仓库。
-          </p>
-          <p>
-            面向开发者，仓库内包含完整源码与开发思路，可供学习、二次修改；面向普通使用者，每款工具都配套简单部署教程，无需深厚编程基础也能快速上手使用。
-          </p>
-          <p class="light-text">
-            日常会持续更新工具、服务、TurboWarp插件，及时修复已知漏洞。
-          </p>
-        </div>
-      </section>
-
-      <!-- 开源项目 -->
-      <section id="projects">
-        <h2 class="section-title">
-          <span class="title-line"></span>
-          项目仓库
-        </h2>
-        <div class="content-box">
-          <ul class="repo-list">
-            <li>
-              <a
-                target="_blank"
-                href="https://github.com/Nathan-Peng?tab=repositories"
-                class="repo-name"
-                >全部仓库</a
-              >
-              <p class="light-text">
-                仓库分为三类：Python 脚本、Web 网页服务、TurboWarp
-                JS插件，按需浏览对应项目。
-              </p>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 交流渠道 -->
-      <section id="contact">
-        <h2 class="section-title">
-          <span class="title-line"></span>
-          交流渠道
-        </h2>
-        <div class="content-box">
-          <p>所有问题、功能建议均在对应仓库的 Issue 留言反馈。</p>
-          <p class="light-text">留言时标注项目名称，方便快速定位并回复。</p>
-        </div>
-      </section>
-
-      <!-- 页脚 -->
-      <footer>
-        <p>© 2026 Nathan-Peng | 使用 GitHub Pages</p>
-      </footer>
     </div>
-  </body>
+</nav>
+
+<div class="container">
+    <!-- 个人名片 -->
+    <div class="hero-card">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/297810409?v=4" alt="Nathan-Peng 头像">
+        <div class="hero-info">
+            <h1>Nathan-Peng</h1>
+            <p class="desc">独立开源爱好者，深耕Python、Web与桌面工具开发，全部项目永久开源免费。</p>
+            <div class="hero-buttons">
+                <a href="https://github.com/Nathan-Peng" target="_blank" rel="noopener noreferrer">访问GitHub主页</a>
+                <a href="mailto:nathan.peng@qq.com">邮件联系（不推荐）</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关于我 -->
+    <section id="about">
+        <h2 class="section-title">关于我</h2>
+        <div class="content-card">
+            <div class="tag-group">
+                <span class="tag">Python自动化</span>
+                <span class="tag">Web轻量服务</span>
+                <span class="tag">桌面客户端</span>
+                <span class="tag">TurboWarp插件</span>
+            </div>
+            <p>所有开发作品托管于GitHub，附带完整源码、注释与极简部署教程，无付费、无闭源限制，可自由学习、二次修改。</p>
+            <p>兼顾开发者二次学习改造、普通用户快速上手使用，持续维护修复漏洞、迭代新功能，保障项目长期可用。</p>
+            <p>欢迎提交Issue反馈问题、提交PR补充功能，一同共建优质开源项目。</p>
+        </div>
+    </section>
+
+    <!-- 开源仓库 -->
+    <section id="project">
+        <h2 class="section-title">开源仓库（实时数据）</h2>
+        <div class="content-card">
+            <p>仓库数据通过GitHub API接口实时同步。</p>
+            <div class="repo-grid" id="repo-container">
+                <div>正在加载仓库数据，请稍候...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交流反馈 -->
+    <section id="contact">
+        <h2 class="section-title">交流与反馈</h2>
+        <div class="content-card">
+            <p>软件故障、功能需求、使用疑问请在对应仓库提交Issue，标注清楚设备系统、运行环境与详细复现步骤。</p>
+            <p>商务定制开发、长期合作事宜，可直接发送邮件沟通，我会尽快查阅回复。</p>
+        </div>
+    </section>
+</div>
+
+<!-- 页脚 -->
+<footer>
+    <div class="run-detail">自2026-07-09起稳定运行：<span id="run-time"></span></div>
+    <div class="copyright">© 2026 Nathan-Peng | 托管于 GitHub Pages</div>
+    <a href="https://stats.uptimerobot.com/yyjrwonmLz" target="_blank" rel="noopener noreferrer" class="uptime-btn">
+        📊 查看站点 UptimeRobot 监控状态页面
+    </a>
+</footer>
+
+<script>
+    // 站点运行计时器
+    const startTime = new Date("2026-07-09 13:30:00").getTime();
+    function updateTimer() {
+        const now = Date.now();
+        let diff = now - startTime;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        diff = diff % (1000 * 60 * 60 * 24);
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        diff = diff % (1000 * 60 * 60);
+        const minutes = Math.floor(diff / (1000 * 60));
+        document.getElementById("run-time").textContent = `${days}天 ${hours}小时 ${minutes}分钟`;
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // 加载仓库数据
+    async function loadRepos() {
+        const container = document.getElementById("repo-container");
+        const owner = "Nathan-Peng";
+        try {
+            const res = await fetch(`https://api.github.com/users/${owner}/repos?sort=updated&per_page=12`);
+            if (!res.ok) throw new Error("仓库接口请求失败");
+            const repos = await res.json();
+            let html = "";
+            repos.forEach(repo => {
+                const desc = repo.description || "暂无项目详细介绍";
+                const starCount = repo.stargazers_count;
+                const license = repo.license?.name ?? "未设置开源协议";
+                const updateDay = new Date(repo.updated_at).toLocaleDateString();
+                const topicHtml = repo.topics?.slice(0,4).map(t=>`<span class="topic-tag">${t}</span>`).join("") || "";
+
+                html += `
+                    <div class="repo-item">
+                        <h4>
+                            ${repo.name}
+                            <span class="star-badge">⭐ ${starCount}</span>
+                        </h4>
+                        <p class="repo-desc">${desc}</p>
+                        <div class="repo-meta-row">
+                            <span>🍴 Fork：${repo.forks_count}</span>
+                            <span>💻 语言：${repo.language || "无"}</span>
+                            <span>📜 ${license}</span>
+                            <span>📅 更新：${updateDay}</span>
+                        </div>
+                        <div>${topicHtml}</div>
+                        <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="repo-link">查看仓库 →</a>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        } catch (err) {
+            container.innerHTML = "<div>仓库数据加载失败，请刷新页面重试</div>";
+            console.error(err);
+        }
+    }
+    loadRepos();
+</script>
+</body>
 </html>
