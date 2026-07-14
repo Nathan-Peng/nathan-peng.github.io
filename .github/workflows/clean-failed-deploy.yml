@@ -1,0 +1,68 @@
+name: 仅清理失败部署记录
+run-name: 自动清理github-pages失败/异常部署
+on:
+  # 推送main分支自动执行
+  push:
+    branches: [ main ]
+  # 支持手动在Actions面板触发
+  workflow_dispatch:
+
+# 必须开启部署读写权限
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  clean_failed_deployments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 安装GitHub CLI & jq解析工具
+        run: sudo apt update && sudo apt install gh jq -y
+
+      - name: 拉取github-pages环境全部部署数据
+        id: fetch_deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api \
+            repos/${{ github.repository }}/deployments?environment=github-pages&per_page=100 \
+            > deployments.json
+          cat deployments.json
+
+      - name: 筛选失败/异常部署ID并批量删除
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 筛选：最终状态为 failure / error 的部署ID
+          FAILED_IDS=$(jq -r '
+            .[] |
+            # 取该部署最新一条状态记录
+            (.statuses | last | .state) as $last_state |
+            select($last_state == "failure" or $last_state == "error") |
+            .id
+          ' deployments.json)
+
+          if [[ -z "$FAILED_IDS" ]]; then
+            echo "✅ 暂无失败部署记录，无需清理"
+            exit 0
+          fi
+
+          echo "=== 待清理失败部署ID列表 ==="
+          echo "$FAILED_IDS"
+
+          # 循环逐个标记失效并删除
+          while IFS= read -r deploy_id; do
+            if [[ -z "$deploy_id" ]]; then continue; fi
+
+            # 第一步：标记部署为 inactive 失效
+            gh api repos/${{ github.repository }}/deployments/$deploy_id/statuses \
+              -X POST \
+              -f state=inactive \
+              -f description="清理历史失败部署，标记失效"
+
+            # 第二步：彻底删除部署记录
+            gh api repos/${{ github.repository }}/deployments/$deploy_id -X DELETE
+            echo "🗑️ 已删除失败部署：$deploy_id"
+          done <<< "$FAILED_IDS"
+
+          echo "🎉 全部失败部署清理完成，成功部署均已保留"
