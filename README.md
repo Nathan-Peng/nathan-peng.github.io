@@ -8,10 +8,10 @@
     <img src="https://img.shields.io/badge/☁️ 部署平台-GitHub%20Pages-%23181717?style=for-the-badge" alt="部署方式">
   </a>
   <a href="https://stats.uptimerobot.com/yyjrwonmLz" target="_blank" title="点击查看完整站点监控统计">
-    <img src="https://img.shields.io/uptimerobot/status/m803446945-df48741faa8606b0e9fab561?style=for-the-badge&label=🟢站点运行状态&labelColor=%23008E87" alt="站点运行状态">
+    <img src="https://img.shields.io/uptimerobot/status/m803446945-cbfc8671244d4dadfe2bf765?style=for-the-badge" alt="站点运行状态">
   </a>
   <a href="https://stats.uptimerobot.com/yyjrwonmLz" target="_blank" title="点击查看完整站点监控统计">
-    <img src="https://img.shields.io/uptimerobot/ratio/m803446945-df48741faa8606b0e9fab561?style=for-the-badge&label=📊30天可用率&labelColor=%23008E87" alt="30天可用率">
+    <img src="https://img.shields.io/uptimerobot/ratio/m803446945-cbfc8671244d4dadfe2bf765?style=for-the-badge" alt="30天可用率">
   </a>
   <img src="https://img.shields.io/badge/🔧 项目状态-本地重构中-%23f97316?style=for-the-badge" alt="项目状态">
   <img src="https://img.shields.io/badge/📅 最后更新-2026.07.14-%2306b6d4?style=for-the-badge" alt="最后更新日期">
