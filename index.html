@@ -6,6 +6,12 @@
     <title>Nathan-Peng | 个人开源主页</title>
     <meta name="description" content="独立开源开发者，专注Python工具、Web服务与桌面应用开发，项目全部开源托管于GitHub。">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>N</text></svg>">
+
+    <!-- Performance: preconnect commonly used external origins to reduce latency -->
+    <link rel="preconnect" href="https://avatars.githubusercontent.com">
+    <link rel="preconnect" href="https://api.github.com">
+    <link rel="preconnect" href="https://keepandroidopen.org">
+
     <style>
         * {
             margin: 0;
@@ -283,7 +289,7 @@
 <body>
 <!-- 顶部横幅 -->
 <div id="my-banner"></div>
-<script src="https://keepandroidopen.org/banner.js?lang=zh&size=normal&hidebutton=off&id=my-banner"></script>
+<!-- NOTE: third-party banner script is loaded asynchronously after DOMContentLoaded to avoid blocking the main thread -->
 
 <!-- 导航栏 -->
 <nav>
@@ -301,7 +307,7 @@
 <div class="container">
     <!-- 个人名片 -->
     <div class="hero-card">
-        <img class="avatar" src="https://avatars.githubusercontent.com/u/297810409?v=4" alt="Nathan-Peng 头像">
+        <img class="avatar" src="https://avatars.githubusercontent.com/u/297810409?v=4&s=120" alt="Nathan-Peng 头像" width="120" height="120" loading="lazy" decoding="async">
         <div class="hero-info">
             <h1>Nathan-Peng</h1>
             <p class="desc">独立开源爱好者，深耕Python、Web与桌面工具开发，全部项目永久开源免费。</p>
@@ -332,7 +338,7 @@
     <section id="project">
         <h2 class="section-title">开源仓库（实时数据）</h2>
         <div class="content-card">
-            <p>仓库数据通过GitHub API接口实时同步。</p>
+            <p>仓库数据通过 GitHub API 在构建阶段同步到静态文件以提升性能。</p>
             <div class="repo-grid" id="repo-container">
                 <div>正在加载仓库数据，请稍候...</div>
             </div>
@@ -359,7 +365,19 @@
 </footer>
 
 <script>
-    // 站点运行计时器
+    // Load third-party banner asynchronously after DOMContentLoaded to avoid blocking render
+    window.addEventListener('DOMContentLoaded', () => {
+      const s = document.createElement('script');
+      s.src = 'https://keepandroidopen.org/banner.js?lang=zh&size=normal&hidebutton=off&id=my-banner';
+      s.async = true;
+      s.onerror = () => { document.getElementById('my-banner').style.display = 'none'; };
+      // Add a short timeout to avoid extremely slow third-party load blocking user interaction
+      const timeout = setTimeout(() => { if (!s.onload) { s.onerror?.(); } }, 3000);
+      s.onload = () => clearTimeout(timeout);
+      document.body.appendChild(s);
+    });
+
+    // 站点运行计时器（更新频率已改为每分钟，减少不必要的 JS 运行）
     const startTime = new Date("2026-07-09 13:30:00").getTime();
     function updateTimer() {
         const now = Date.now();
@@ -372,23 +390,36 @@
         document.getElementById("run-time").textContent = `${days}天 ${hours}小时 ${minutes}分钟`;
     }
     updateTimer();
-    setInterval(updateTimer, 1000);
+    setInterval(updateTimer, 60 * 1000);
 
-    // 加载仓库数据
+    // 加载仓库数据：优先使用构建时生成的静态文件 /data/repos.json，若不可用则回退到 GitHub API（带错误处理）
     async function loadRepos() {
         const container = document.getElementById("repo-container");
         const owner = "Nathan-Peng";
+        container.innerHTML = '<div>正在加载仓库数据，请稍候...</div>';
         try {
-            const res = await fetch(`https://api.github.com/users/${owner}/repos?sort=updated&per_page=12`);
-            if (!res.ok) throw new Error("仓库接口请求失败");
+            // 优先加载静态构建产物
+            let res = await fetch('/data/repos.json');
+            if (!res.ok) {
+                // 回退到 API（注意速率限制）
+                res = await fetch(`https://api.github.com/users/${owner}/repos?sort=updated&per_page=12`);
+            }
+            if (!res.ok) throw new Error('仓库接口请求失败');
             const repos = await res.json();
+
+            if (!Array.isArray(repos) || repos.length === 0) {
+                container.innerHTML = '<div>暂无仓库数据，请稍后再试</div>';
+                return;
+            }
+
             let html = "";
-            repos.forEach(repo => {
+            repos.slice(0,12).forEach(repo => {
                 const desc = repo.description || "暂无项目详细介绍";
-                const starCount = repo.stargazers_count;
-                const license = repo.license?.name ?? "未设置开源协议";
-                const updateDay = new Date(repo.updated_at).toLocaleDateString();
-                const topicHtml = repo.topics?.slice(0,4).map(t=>`<span class="topic-tag">${t}</span>`).join("") || "";
+                const starCount = repo.stargazers_count || repo.stargazers || 0;
+                const license = repo.license?.name ?? repo.license ?? "未设置开源协议";
+                const updateDay = repo.updated_at ? new Date(repo.updated_at).toLocaleDateString() : '';
+                const topics = repo.topics || repo.topics || [];
+                const topicHtml = topics.slice(0,4).map(t=>`<span class=\"topic-tag\">${t}</span>`).join("") || "";
 
                 html += `
                     <div class="repo-item">
@@ -398,7 +429,7 @@
                         </h4>
                         <p class="repo-desc">${desc}</p>
                         <div class="repo-meta-row">
-                            <span>🍴 Fork：${repo.forks_count}</span>
+                            <span>🍴 Fork：${repo.forks_count || 0}</span>
                             <span>💻 语言：${repo.language || "无"}</span>
                             <span>📜 ${license}</span>
                             <span>📅 更新：${updateDay}</span>
