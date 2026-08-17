@@ -1,0 +1,60 @@
+name: 清理全部非成功部署记录
+run-name: 仅保留成功部署，其余部署全部清理
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # 支持手动触发
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  clean_non_success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 安装 gh 与 jq 解析工具
+        run: sudo apt update && sudo apt install gh jq -y
+
+      - name: 拉取当前环境全部部署清单
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/${{ github.repository }}/deployments?environment=github-pages&per_page=100 > deploy_list.json
+          cat deploy_list.json
+
+      - name: 筛选需要删除的部署（排除success，其余全删）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 筛选规则：只要state不是success，全部纳入待删除列表
+          DELETE_IDS=$(jq -r '
+            .[] |
+            select(.state != "success") |
+            .id
+          ' deploy_list.json)
+
+          if [[ -z "$DELETE_IDS" ]]; then
+            echo "✅ 列表中全部为成功部署，无需清理，流程结束"
+            exit 0
+          fi
+
+          echo "===== 待清理部署ID清单 ====="
+          echo "$DELETE_IDS"
+
+          # 循环执行：标记失效 → 删除部署
+          while IFS= read -r deploy_id; do
+            [[ -z "$deploy_id" ]] && continue
+
+            # 第一步：将部署标记为 inactive 解除激活状态
+            gh api repos/${{ github.repository }}/deployments/$deploy_id/statuses \
+              -X POST \
+              -f state=inactive \
+              -f description="清理非成功部署，统一标记失效"
+
+            # 第二步：调用接口彻底删除该条部署记录
+            gh api repos/${{ github.repository }}/deployments/$deploy_id -X DELETE
+            echo "🗑️ 已清理部署 ID：$deploy_id"
+          done <<< "$DELETE_IDS"
+
+          echo "🎉 清理完成！当前列表仅留存所有部署状态为 success 的记录"

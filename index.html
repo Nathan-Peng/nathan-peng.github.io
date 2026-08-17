@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nathan-Peng | 个人开源主页</title>
+    <meta
+      name="description"
+      content="独立开源开发者，专注 Python 工具、Web 服务与桌面应用开发，项目全部开源托管于 GitHub。"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>N</text></svg>"
+    />
+
+    <!-- Performance: preconnect commonly used external origins to reduce latency -->
+    <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+    <link rel="preconnect" href="https://api.github.com" />
+    <link rel="preconnect" href="https://keepandroidopen.org" />
+    <link rel="preconnect" href="https://browser-update.org" />
+    <link rel="preconnect" href="https://trtc.io" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          "Segoe UI",
+          Inter,
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      body {
+        background-color: #f7f8fa;
+        color: #1d2129;
+        line-height: 1.68;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* 导航栏 */
+      nav {
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        padding: 18px 0;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+      }
+      .nav-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .nav-logo {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0056cc;
+        text-decoration: none;
+        transition: opacity 0.2s ease;
+      }
+      .nav-logo:hover {
+        opacity: 0.8;
+      }
+      .nav-links a {
+        margin-left: 28px;
+        color: #4e5969;
+        text-decoration: none;
+        font-size: 15px;
+        padding: 5px 0;
+        position: relative;
+        transition: color 0.2s ease;
+      }
+      .nav-links a:hover {
+        color: #0056cc;
+      }
+      .nav-links a:hover::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #0056cc;
+        bottom: 0;
+        left: 0;
+      }
+
+      /* 个人名片卡片 */
+      .hero-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 40px;
+        margin: 40px 0;
+        border-left: 6px solid #0056cc;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        box-shadow: 0 3px 16px rgba(0, 0, 0, 0.05);
+      }
+      .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid #0056cc;
+        object-fit: cover;
+      }
+      .hero-info h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+      .hero-info .desc {
+        color: #6b7785;
+        font-size: 17px;
+        margin-bottom: 22px;
+      }
+      .hero-buttons a {
+        display: inline-block;
+        padding: 10px 22px;
+        background: #e8f3ff;
+        color: #0056cc;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-right: 16px;
+        transition: all 0.25s ease;
+        font-weight: 500;
+      }
+      .hero-buttons a:hover {
+        background: #0056cc;
+        color: #ffffff;
+      }
+
+      /* 通用板块标题 */
+      .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        margin: 48px 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-title::before {
+        content: "";
+        width: 5px;
+        height: 22px;
+        background-color: #0056cc;
+        border-radius: 3px;
+      }
+      .content-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 32px;
+        box-shadow: 0 3px 16px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 技能标签 */
+      .tag-group {
+        margin: 16px 0 22px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .tag {
+        padding: 6px 16px;
+        background: #e8f3ff;
+        color: #0056cc;
+        border-radius: 24px;
+        font-size: 14px;
+      }
+
+      /* 仓库网格布局 */
+      .repo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 22px;
+        margin-top: 24px;
+      }
+      .repo-item {
+        border: 1px solid #e5e6eb;
+        border-radius: 12px;
+        padding: 22px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+      }
+      .repo-item:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        transform: translateY(-5px);
+        border-color: #d0e4ff;
+      }
+      .repo-item h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .star-badge {
+        font-size: 14px;
+        color: #666;
+      }
+      .repo-desc {
+        font-size: 14.8px;
+        color: #4e5969;
+        margin-bottom: 14px;
+        min-height: 46px;
+      }
+      .repo-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        font-size: 13.5px;
+        color: #666;
+        margin-bottom: 14px;
+      }
+      .topic-tag {
+        font-size: 12.5px;
+        padding: 3px 8px;
+        background: #f0f7ff;
+        color: #0056cc;
+        border-radius: 14px;
+      }
+      .repo-link {
+        color: #0056cc;
+        text-decoration: none;
+        font-size: 15px;
+        margin-top: auto;
+        display: inline-block;
+        font-weight: 500;
+      }
+      .repo-link:hover {
+        text-decoration: underline;
+      }
+
+      /* 页脚样式 + UptimeRobot美化按钮 */
+      footer {
+        margin-top: 80px;
+        padding: 40px 0;
+        text-align: center;
+        font-size: 14px;
+        color: #6b7785;
+        border-top: 1px solid #e5e6eb;
+      }
+      .run-detail {
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+      .copyright {
+        margin-bottom: 18px;
+      }
+      .uptime-btn {
+        display: inline-block;
+        padding: 9px 24px;
+        background-color: #009688;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 3px 10px rgba(0, 150, 136, 0.25);
+        transition: all 0.25s ease;
+      }
+      .uptime-btn:hover {
+        background-color: #00796b;
+        box-shadow: 0 4px 14px rgba(0, 150, 136, 0.35);
+        transform: translateY(-2px);
+      }
+
+      /* 移动端适配 */
+      @media screen and (max-width: 640px) {
+        .hero-card {
+          flex-direction: column;
+          text-align: center;
+          padding: 30px 20px;
+        }
+        .nav-wrap {
+          flex-direction: column;
+          gap: 14px;
+        }
+        .nav-links {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 16px;
+        }
+        .nav-links a {
+          margin-left: 0;
+        }
+        .hero-buttons a {
+          margin: 0 8px 10px;
+        }
+        .repo-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 顶部横幅 -->
+    <div id="my-banner"></div>
+    <!-- NOTE: third-party banner script is loaded asynchronously after DOMContentLoaded to avoid blocking the main thread -->
+
+    <!-- 导航栏 -->
+    <nav>
+      <div class="container nav-wrap">
+        <a href="#" class="nav-logo">Nathan-Peng</a>
+        <div class="nav-links">
+          <a href="#about">关于我</a>
+          <a href="#project">开源仓库</a>
+          <a href="#contact">交流反馈</a>
+          <a
+            href="https://github.com/Nathan-Peng"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- 个人名片 -->
+      <div class="hero-card">
+        <img
+          class="avatar"
+          src="https://avatars.githubusercontent.com/u/297810409?v=4&s=120"
+          alt="Nathan-Peng 头像"
+          width="120"
+          height="120"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="hero-info">
+          <h1>Nathan-Peng</h1>
+          <p class="desc">
+            独立开源爱好者，深耕Python、Web与桌面工具开发，全部项目永久开源免费。
+          </p>
+          <div class="hero-buttons">
+            <a
+              href="https://github.com/Nathan-Peng"
+              target="_blank"
+              rel="noopener noreferrer"
+              >访问GitHub主页</a
+            >
+            <a href="mailto:nathan.peng@qq.com">邮件联系（不推荐）</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 关于我 -->
+      <section id="about">
+        <h2 class="section-title">关于我</h2>
+        <div class="content-card">
+          <div class="tag-group">
+            <span class="tag">Python自动化</span>
+            <span class="tag">Web轻量服务</span>
+            <span class="tag">桌面客户端</span>
+            <span class="tag">TurboWarp插件</span>
+          </div>
+          <p>
+            所有开发作品托管于GitHub，附带完整源码、注释与极简部署教程，无付费、无闭源限制，可自由学习、二次修改。
+          </p>
+          <p>
+            兼顾开发者二次学习改造、普通用户快速上手使用，持续维护修复漏洞、迭代新功能，保障项目长期可用。
+          </p>
+          <p>欢迎提交Issue反馈问题、提交PR补充功能，一同共建优质开源项目。</p>
+        </div>
+      </section>
+
+      <!-- 开源仓库 -->
+      <section id="project">
+        <h2 class="section-title">开源仓库（实时数据）</h2>
+        <div class="content-card">
+          <p>仓库数据通过 GitHub API 在构建阶段同步到静态文件以提升性能。</p>
+          <div class="repo-grid" id="repo-container">
+            <div>正在加载仓库数据，请稍候...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 交流反馈 -->
+      <section id="contact">
+        <h2 class="section-title">交流与反馈</h2>
+        <div class="content-card">
+          <p>
+            软件故障、功能需求、使用疑问请在对应仓库提交Issue，标注清楚设备系统、运行环境与详细复现步骤。
+          </p>
+          <p>
+            商务定制开发、长期合作事宜，可直接发送邮件沟通，我会尽快查阅回复。
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+      <div class="run-detail">
+        自2026-07-09起稳定运行：<span id="run-time"></span>
+      </div>
+      <div class="copyright">© 2026 Nathan-Peng | 托管于 GitHub Pages</div>
+      <a
+        href="https://stats.uptimerobot.com/yyjrwonmLz"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="uptime-btn"
+      >
+        📊 查看站点 UptimeRobot 监控状态页面
+      </a>
+    </footer>
+
+    <script>
+      // Load third-party banner asynchronously after DOMContentLoaded to avoid blocking render
+      window.addEventListener("DOMContentLoaded", () => {
+        const s = document.createElement("script");
+        s.src =
+          "https://keepandroidopen.org/banner.js?lang=zh&size=mini&animation=off&id=my-banner";
+        s.async = true;
+        s.onerror = () => {
+          document.getElementById("my-banner").style.display = "none";
+        };
+        // Add a short timeout to avoid extremely slow third-party load blocking user interaction
+        const timeout = setTimeout(() => {
+          if (!s.onload) {
+            s.onerror?.();
+          }
+        }, 3000);
+        s.onload = () => clearTimeout(timeout);
+        document.body.appendChild(s);
+      });
+
+      // 站点运行计时器（更新频率已改为每分钟，减少不必要的 JS 运行）
+      const startTime = new Date("2026-07-09 13:30:00").getTime();
+      function updateTimer() {
+        const now = Date.now();
+        let diff = now - startTime;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        diff = diff % (1000 * 60 * 60 * 24);
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        diff = diff % (1000 * 60 * 60);
+        const minutes = Math.floor(diff / (1000 * 60));
+        document.getElementById("run-time").textContent =
+          `${days}天 ${hours}小时 ${minutes}分钟`;
+      }
+      updateTimer();
+      setInterval(updateTimer, 60 * 1000);
+
+      // 加载仓库数据：优先使用构建时生成的静态文件 /data/repos.json，若不可用则回退到 GitHub API（带错误处理）
+      async function loadRepos() {
+        const container = document.getElementById("repo-container");
+        const owner = "Nathan-Peng";
+        container.innerHTML = "<div>正在加载仓库数据，请稍候...</div>";
+        try {
+          // 优先加载静态构建产物
+          let res = await fetch("/data/repos.json");
+          if (!res.ok) {
+            // 回退到 API（注意速率限制）
+            res = await fetch(
+              `https://api.github.com/users/${owner}/repos?sort=updated&per_page=12`,
+            );
+          }
+          if (!res.ok) throw new Error("仓库接口请求失败");
+          const repos = await res.json();
+
+          if (!Array.isArray(repos) || repos.length === 0) {
+            container.innerHTML = "<div>暂无仓库数据，请稍后再试</div>";
+            return;
+          }
+
+          let html = "";
+          repos.slice(0, 12).forEach((repo) => {
+            const desc = repo.description || "暂无项目详细介绍";
+            const starCount = repo.stargazers_count || repo.stargazers || 0;
+            const license =
+              repo.license?.name ?? repo.license ?? "未设置开源协议";
+            const updateDay = repo.updated_at
+              ? new Date(repo.updated_at).toLocaleDateString()
+              : "";
+            const topics = repo.topics || repo.topics || [];
+            const topicHtml =
+              topics
+                .slice(0, 4)
+                .map((t) => `<span class=\"topic-tag\">${t}</span>`)
+                .join("") || "";
+
+            html += `
+                    <div class="repo-item">
+                        <h4>
+                            ${repo.name}
+                            <span class="star-badge">⭐ ${starCount}</span>
+                        </h4>
+                        <p class="repo-desc">${desc}</p>
+                        <div class="repo-meta-row">
+                            <span>🍴 Fork：${repo.forks_count || 0}</span>
+                            <span>💻 语言：${repo.language || "无"}</span>
+                            <span>📜 ${license}</span>
+                            <span>📅 更新：${updateDay}</span>
+                        </div>
+                        <div>${topicHtml}</div>
+                        <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="repo-link">查看仓库 →</a>
+                    </div>
+                `;
+          });
+          container.innerHTML = html;
+        } catch (err) {
+          container.innerHTML = "<div>仓库数据加载失败，请刷新页面重试</div>";
+          console.error(err);
+        }
+      }
+      loadRepos();
+    </script>
+    <script>
+      var $buoop = {
+        required: { e: -4, f: -3, o: -3, s: -1, c: -3 },
+        insecure: true,
+        unsupported: true,
+        style: "bottom",
+        api: 2026.08,
+      };
+      function $buo_f() {
+        var e = document.createElement("script");
+        e.src = "//browser-update.org/update.min.js";
+        document.body.appendChild(e);
+      }
+      try {
+        document.addEventListener("DOMContentLoaded", $buo_f, false);
+      } catch (e) {
+        window.attachEvent("onload", $buo_f);
+      }
+    </script>
+    <script
+      src="https://trtc.io/knocket-sdk/sdk.js?identifier=76c7c9fb877d60436a"
+      async
+    ></script>
+  </body>
+</html>
